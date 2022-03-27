@@ -69,7 +69,7 @@ app.use(router.routes()).use(router.allowedMethods());
 // });
 
 // const port = PORT || 4001;
-const port = 4001;
+const port = process.env.PORT || 4001;
 app.listen(port, () => {
   console.log('HTTP server Listening on PORT ' + port);
 });
