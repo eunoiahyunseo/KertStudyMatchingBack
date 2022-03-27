@@ -24,7 +24,7 @@
     "nodemon": "^2.0.15"
   },
   "scripts": {
-    "start": "node -r esm src",
+    "start": "node -r esm src/index.js",
     "start:dev": "nodemon --watch src/ -r esm src/index.js",
     "start:https": "HTTPS=true SSL_CRT_FILE=localhost+2.pem SSL_KEY_FILE=localhost+2-key.pem node -r esm src"
   }
