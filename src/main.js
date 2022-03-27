@@ -14,8 +14,8 @@ import fs from 'fs';
 const HTTPS_PORT = 4000;
 
 const options = {
-  key: fs.readFileSync(path.resolve(__dirname, '../ssl/private.pem')),
-  cert: fs.readFileSync(path.resolve(__dirname, '../ssl/public.pem')),
+  key: fs.readFileSync(path.resolve(__dirname, './ssl/private.pem')),
+  cert: fs.readFileSync(path.resolve(__dirname, './ssl/public.pem')),
 };
 
 const { PORT } = process.env;
@@ -74,8 +74,8 @@ app.listen(port, () => {
   console.log('HTTP server Listening on PORT ' + port);
 });
 
-const httpsServer = https.createServer(options, app.callback());
+// const httpsServer = https.createServer(options, app.callback());
 
-httpsServer.listen(HTTPS_PORT, () => {
-  console.log('HTTPS server listening on PORT ' + HTTPS_PORT);
-});
+// httpsServer.listen(HTTPS_PORT, () => {
+//   console.log('HTTPS server listening on PORT ' + HTTPS_PORT);
+// });
