@@ -51,7 +51,7 @@ let corsOption = {
 app.proxy = true;
 app.use(cors(corsOption));
 
-router.get('/', (ctx) => {
+router.get('/hello', (ctx) => {
   ctx.body = 'hello Heroku';
 });
 
