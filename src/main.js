@@ -21,6 +21,8 @@ const options = {
 const { PORT } = process.env;
 
 // import createFakeData from './createFakeData';
+console.log('happy');
+
 mongoose
   .connect(
     'mongodb+srv://hyunseo:gustj486!!@cluster0.3g9wa.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
