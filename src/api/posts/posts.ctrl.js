@@ -127,6 +127,7 @@ export const list = async (ctx) => {
       .exec();
     console.log('posts >> ', posts);
     const postCount = await Post.countDocuments(query).exec();
+    ctx.set('Access-Control-Expose-Headers', '*');
     ctx.set('Last-page', Math.ceil(postCount / 10));
     ctx.body = posts.map((post) => ({
       ...post,
