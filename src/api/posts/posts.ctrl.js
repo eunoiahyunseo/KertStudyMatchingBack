@@ -40,6 +40,9 @@ export const getPostById = async (ctx, next) => {
   }
   try {
     const post = await Post.findById(id).populate('creator').populate('likeId');
+
+    const filteredData = await Post.populate(post, { path: 'like_user' });
+    console.log(filteredData);
     // const filteredData = await Post.populate(post, { path: 'creator' });
     // filteredData.creator.hashedPassword = '응 뚫어봐~';
     post.creator.hashedPassword = '응 뚫어봐~';

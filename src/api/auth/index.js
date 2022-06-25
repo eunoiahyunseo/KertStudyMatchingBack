@@ -13,4 +13,6 @@ auth.post('/logout', authCtrl.logout);
 
 auth.patch('/:id', authCtrl.editProfile);
 
+auth.post('/like_user', authCtrl.check_like_user);
+
 export default auth;

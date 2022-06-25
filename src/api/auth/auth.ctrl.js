@@ -189,3 +189,24 @@ export const editProfile = async (ctx) => {
     ctx.throw(500, e);
   }
 };
+
+/**
+ * 마지막으로 like_user배열을 받으면 ObjectId를 모두 User와 매핑 시켜주는 API를 작성해야 한다.
+ * GET /api/auth/like_user
+ *
+ * 이 떄 ctx.body로 like_user 배열이 올 것이다.
+ */
+export const check_like_user = async (ctx) => {
+  const like_user = ctx.request.body;
+  const result = await Promise.all(
+    like_user.map((userId) => {
+      return User.findById(userId);
+    }),
+  );
+
+  const userInfo = result.map((user) => {
+    user.hashedPassword = '못 뚫어~';
+    return user;
+  });
+  ctx.body = userInfo;
+};
