@@ -76,7 +76,7 @@ router.post('/api/upload', upload.single('image'), (ctx) => {
 
 app.use(router.routes()).use(router.allowedMethods());
 
-const buildDirectory = path.resolve(__dirname, '/build');
+const buildDirectory = path.resolve(__dirname, './build');
 app.use(serve(buildDirectory));
 
 app.use(async (ctx) => {
