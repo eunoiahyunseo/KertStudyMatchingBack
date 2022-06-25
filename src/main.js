@@ -53,13 +53,13 @@ const app = new Koa();
 const router = new Router();
 
 // TODO: 다른 도메인에서의 cookie공유 (x)
-let corsOption = {
-  origin: process.env.CLIENT_HOST,
-  credentials: true,
-};
+// let corsOption = {
+//   origin: process.env.CLIENT_HOST,
+//   credentials: true,
+// };
 
-app.proxy = true;
-app.use(cors(corsOption));
+// app.proxy = true;
+// app.use(cors(corsOption));
 app.use(serve(__dirname + '/uploads'));
 
 router.use('/api', api.routes());
@@ -69,7 +69,7 @@ app.use(jwtMiddleware);
 
 router.post('/api/upload', upload.single('image'), (ctx) => {
   console.log(ctx.file);
-  const IMG_URL = `${process.env.CLIENT_HOST}/${ctx.file.filename}`;
+  const IMG_URL = `${process.env.SERVER_HOST}/${ctx.file.filename}`;
   console.log(IMG_URL);
   ctx.body = { url: IMG_URL };
 });
