@@ -27,7 +27,7 @@ const sanitizeOption = {
     img: ['src'],
     li: ['class'],
   },
-  allowedSchemes: ['data', 'http'],
+  allowedSchemes: ['data', 'http', 'https'],
 };
 
 // 파라미터로 들어온 id로 연관된 포스틀 찾는 함수
