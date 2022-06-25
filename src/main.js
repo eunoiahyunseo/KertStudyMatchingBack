@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-require('dotenv').config();
 import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
@@ -8,31 +7,40 @@ import serve from 'koa-static';
 import path from 'path';
 import send from 'koa-send';
 import cors from '@koa/cors';
-import https from 'https';
-import fs from 'fs';
+import multer from '@koa/multer';
+const dotenv = require('dotenv');
 
-const HTTPS_PORT = 4000;
+dotenv.config({
+  path: path.resolve(
+    process.cwd(),
+    process.env.NODE_ENV === 'production' ? '.env' : '.env.dev',
+  ),
+});
 
-const options = {
-  key: fs.readFileSync(path.resolve(__dirname, './ssl/private.pem')),
-  cert: fs.readFileSync(path.resolve(__dirname, './ssl/public.pem')),
-};
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.resolve(__dirname, './uploads/'));
+    },
+    filename: function (req, file, cb) {
+      const ext = '.png';
+      cb(null, path.basename(file.originalname, ext) + '-' + Date.now() + ext);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
 
-const { PORT } = process.env;
-
-// import createFakeData from './createFakeData';
-console.log('happy');
-
+console.log(process.cwd());
+console.log(process.env.NODE_ENV);
 mongoose
   .connect(
-    'mongodb+srv://hyunseo:gustj486!!@cluster0.3g9wa.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    `mongodb+srv://${process.env.MONGODB_HOST}:${process.env.MONGODB_PASSWORD}@cluster0.pdnpdm5.mongodb.net/?retryWrites=true&w=majority`,
     {
       dbName: 'blog',
     },
   )
   .then(() => {
     console.log('Connected to MongoDB');
-    // createFakeData();
   })
   .catch((e) => {
     console.error(e);
@@ -52,36 +60,34 @@ let corsOption = {
 
 app.proxy = true;
 app.use(cors(corsOption));
-
-router.get('/hello', (ctx) => {
-  ctx.body = 'hello Heroku';
-});
+app.use(serve(__dirname + '/uploads'));
 
 router.use('/api', api.routes());
 
 app.use(bodyParser());
 app.use(jwtMiddleware);
 
+router.post('/api/upload', upload.single('image'), (ctx) => {
+  console.log(ctx.file);
+  const IMG_URL = `http://localhost:4000/${ctx.file.filename}`;
+  console.log(IMG_URL);
+  ctx.body = { url: IMG_URL };
+});
+
 app.use(router.routes()).use(router.allowedMethods());
 
-// const buildDirectory = path.resolve(__dirname, '../../blog-frontend/build');
-// app.use(serve(buildDirectory));
-// app.use(async (ctx) => {
-//   // Not Found이고, 주소가 /api로 시작하지 않는 경우
-//   if (ctx.status === 404 && ctx.path.indexOf('/api') !== 0) {
-//     // index.html의 내용을 반환
-//     await send(ctx, 'index.html', { root: buildDirectory });
-//   }\
-// });
+const buildDirectory = path.resolve(__dirname, '../../final-project/build');
+app.use(serve(buildDirectory));
 
-// const port = PORT || 4001;
-const port = process.env.PORT || 4001;
+app.use(async (ctx) => {
+  // Not Found이고, 주소가 /api로 시작하지 않는 경우
+  if (ctx.status === 404 && ctx.path.indexOf('/api') !== 0) {
+    // index.html내용을 반환한다.
+    await send(ctx, 'index.html', { root: buildDirectory });
+  }
+});
+
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log('HTTP server Listening on PORT ' + port);
 });
-
-// const httpsServer = https.createServer(options, app.callback());
-
-// httpsServer.listen(HTTPS_PORT, () => {
-//   console.log('HTTPS server listening on PORT ' + HTTPS_PORT);
-// });

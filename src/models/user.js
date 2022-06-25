@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const UserSchema = new Schema({
+  email: String,
   username: String,
   hashedPassword: String,
 });
@@ -20,6 +21,8 @@ UserSchema.methods.checkPassword = async function (password) {
 
 UserSchema.methods.serialize = function () {
   const data = this.toJSON();
+  // 응답할 데이터에서 hashedPassword를 삭제해야 한다.
+  // 알면 안되기 때문이다.
   delete data.hashedPassword;
   return data;
 };
@@ -30,6 +33,7 @@ UserSchema.methods.generateToken = function () {
     {
       _id: this.id,
       username: this.username,
+      email: this.email,
     },
     // 두 번째 파라미터에는 JWT암호를 넣습니다.
     process.env.JWT_SECRET,
@@ -41,8 +45,8 @@ UserSchema.methods.generateToken = function () {
   return token;
 };
 
-UserSchema.statics.findByUsername = function (username) {
-  return this.findOne({ username });
+UserSchema.statics.findByEmail = function (email) {
+  return this.findOne({ email });
 };
 
 const User = mongoose.model('User', UserSchema);

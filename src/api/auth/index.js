@@ -11,4 +11,6 @@ auth.get('/check', authCtrl.check);
 
 auth.post('/logout', authCtrl.logout);
 
+auth.patch('/:id', authCtrl.editProfile);
+
 export default auth;
