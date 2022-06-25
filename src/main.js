@@ -69,7 +69,7 @@ app.use(jwtMiddleware);
 
 router.post('/api/upload', upload.single('image'), (ctx) => {
   console.log(ctx.file);
-  const IMG_URL = `http://localhost:4000/${ctx.file.filename}`;
+  const IMG_URL = `${process.env.CLIENT_HOST}/${ctx.file.filename}`;
   console.log(IMG_URL);
   ctx.body = { url: IMG_URL };
 });
